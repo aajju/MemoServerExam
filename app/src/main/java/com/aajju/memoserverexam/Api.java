@@ -32,7 +32,7 @@ public interface Api {
     @FormUrlEncoded
     Call<Void> login(@Field("email") String email, @Field("password") String password);
 
-    @GET("memo/")
+    @GET("memo")
     Call<List<Memo>> getMemoList(@Header("x-auth-token") String token);
 
     @PUT("memo/")

@@ -22,6 +22,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
         void onMemoItemLongClicked(int position, Memo memo);
     }
+
     private List<Memo> mData = new ArrayList<>();
     private OnMemoItemClickListener mListener;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");

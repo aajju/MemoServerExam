@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
                                 return;
                             }
                             mToken = response.headers().get("x-auth-token");
+//                            Toast.makeText(MainActivity.this, mToken, Toast.LENGTH_SHORT).show();
                             new TestAsyncTask().execute();
-//                            Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             mProgressDialog.dismiss();
             Intent intent = new Intent(MainActivity.this, ListActivity.class);
-            intent.putExtra("tokem", mToken);
+            intent.putExtra("token", mToken);
 
             startActivity(intent);
         }

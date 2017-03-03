@@ -30,6 +30,8 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
 
+//        Toast.makeText(this, mToken, Toast.LENGTH_SHORT).show();
+
         mApi = HttpHelper.getAPI();
         // 모든 콜백 리스너(특정 이벤트가 실행시 수행되는 메소드) 구현하는 세가지 방법
         mMemoAdapter = new MemoAdapter(this);
@@ -40,6 +42,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
 
         getMemoList();
 
+        // 메모 추가 버튼
         findViewById(R.id.list_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,6 +55,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // 메모 추가 후 리스트 액티비티로 복귀
         if(requestCode == 1000 && resultCode == RESULT_OK && data != null){
             String subject, content;
             subject = data.getStringExtra("subject");
@@ -80,12 +84,12 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
 //                    Toast.makeText(ListActivity.this, "가져올 메모 리스트가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
-//                Toast.makeText(ListActivity.this, response.body().toString(), Toast.LENGTH_LONG).show();
                 mMemoAdapter.swapData(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Memo>> call, Throwable t) {
+                System.out.println(t);
                 Toast.makeText(ListActivity.this, "메모 리스트 가져오기에 실패함", Toast.LENGTH_SHORT).show();
             }
         });
