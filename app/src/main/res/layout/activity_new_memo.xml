@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_new_memo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.aajju.memoserverexam.NewMemoActivity">
+
+    <EditText
+        android:id="@+id/new_subject_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="  메모 제목을 입력하세요" />
+
+    <EditText
+        android:id="@+id/new_content_et"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:hint="  메모 내용을 입력하세요" />
+
+    <Button
+        android:id="@+id/new_ok_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="메모 추가" />
+
+</LinearLayout>

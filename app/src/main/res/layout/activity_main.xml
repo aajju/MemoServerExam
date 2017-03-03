@@ -19,8 +19,7 @@
     <EditText
         android:id="@+id/email_et"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="   |" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
@@ -30,13 +29,12 @@
     <EditText
         android:id="@+id/password_et"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="   |" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:gravity="center">
 
         <Button
 

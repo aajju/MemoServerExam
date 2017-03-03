@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_modify_memo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.aajju.memoserverexam.ModifyMemoActivity">
+
+    <EditText
+        android:id="@+id/modi_subject_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <EditText
+        android:id="@+id/modi_content_et"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="start" />
+
+    <Button
+        android:id="@+id/modi_ok_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="수정 완료" />
+
+</LinearLayout>
