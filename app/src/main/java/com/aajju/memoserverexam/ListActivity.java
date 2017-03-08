@@ -19,18 +19,15 @@ import retrofit2.Response;
 public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMemoItemClickListener {
 
     private Api mApi;
+    private PreferenceManager mPreferenceManager;
     private MemoAdapter mMemoAdapter;
-    private String mToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
-
-//        Toast.makeText(this, mToken, Toast.LENGTH_SHORT).show();
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
 
         mApi = HttpHelper.getAPI();
         // 모든 콜백 리스너(특정 이벤트가 실행시 수행되는 메소드) 구현하는 세가지 방법
@@ -56,7 +53,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         super.onActivityResult(requestCode, resultCode, data);
 
         // 메모 추가 후 리스트 액티비티로 복귀
-        if(requestCode == 1000 && resultCode == RESULT_OK && data != null){
+        if (requestCode == 1000 && resultCode == RESULT_OK && data != null) {
             String subject, content;
             subject = data.getStringExtra("subject");
             content = data.getStringExtra("content");
@@ -64,7 +61,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
             getMemoList();
         }
 
-        if(requestCode == 2000 && resultCode == RESULT_OK && data != null){
+        if (requestCode == 2000 && resultCode == RESULT_OK && data != null) {
             String subject, content;
             int id = data.getIntExtra("id", -1);
             subject = data.getStringExtra("subject");
@@ -76,11 +73,11 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         }
     }
 
-    private void getMemoList(){
-        mApi.getMemoList(mToken).enqueue(new Callback<List<Memo>>() {
+    private void getMemoList() {
+        mApi.getMemoList(mPreferenceManager.getUserToken()).enqueue(new Callback<List<Memo>>() {
             @Override
             public void onResponse(Call<List<Memo>> call, Response<List<Memo>> response) {
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     Toast.makeText(ListActivity.this, "가져올 메모 리스트가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -95,8 +92,8 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         });
     }
 
-    private  void addMemo(final Memo memo){
-        mApi.addMemo(mToken, memo.getTitle(), memo.getContents()).enqueue(new Callback<Void>() {
+    private void addMemo(final Memo memo) {
+        mApi.addMemo(mPreferenceManager.getUserToken(), memo.getTitle(), memo.getContents()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 //                if(!response.isSuccessful()){
@@ -113,8 +110,8 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         });
     }
 
-    private  void updateMemo(final int id, final Memo memo){
-        mApi.updateMemo(mToken, id, memo.getTitle(), memo.getContents()).enqueue(new Callback<Void>() {
+    private void updateMemo(final int id, final Memo memo) {
+        mApi.updateMemo(mPreferenceManager.getUserToken(), id, memo.getTitle(), memo.getContents()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 //                if(!response.isSuccessful()){
@@ -132,8 +129,8 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
 
     }
 
-    private void deleteMemo(final int id){
-        mApi.deleteMemo(mToken, id).enqueue(new Callback<Void>() {
+    private void deleteMemo(final int id) {
+        mApi.deleteMemo(mPreferenceManager.getUserToken(), id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mMemoAdapter.deleteData(id);
@@ -151,7 +148,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("메모 수정");
         builder.setMessage("메모를 수정하시겠습니까?");
-        builder.setNegativeButton("취소" , null);
+        builder.setNegativeButton("취소", null);
         builder.setPositiveButton("수정", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -169,7 +166,7 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("메모 삭제");
         builder.setMessage("메모를 삭제하시겠습니까?");
-        builder.setNegativeButton("취소" , null);
+        builder.setNegativeButton("취소", null);
         builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
