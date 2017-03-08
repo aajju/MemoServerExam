@@ -80,17 +80,17 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         mApi.getMemoList(mToken).enqueue(new Callback<List<Memo>>() {
             @Override
             public void onResponse(Call<List<Memo>> call, Response<List<Memo>> response) {
-//                if(!response.isSuccessful()){
-//                    Toast.makeText(ListActivity.this, "가져올 메모 리스트가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if(!response.isSuccessful()){
+                    Toast.makeText(ListActivity.this, "가져올 메모 리스트가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 mMemoAdapter.swapData(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Memo>> call, Throwable t) {
-                System.out.println(t);
-                Toast.makeText(ListActivity.this, "메모 리스트 가져오기에 실패함", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
             }
         });
     }
