@@ -60,16 +60,25 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         notifyItemInserted(mData.size()-1);
     }
 
-    public void updateData(int position, Memo memo){
-        mData.add(position, memo);
-        mData.remove(position + 1);
-        notifyDataSetChanged();
+    public void updateData(int id, Memo memo){
+        for(int i = 0 ; i < mData.size() ; i++){
+            if(mData.get(i).getId() == id) {
+                mData.add(i, memo);
+                mData.remove(i+1);
+                notifyDataSetChanged();
+                return;
+            }
+        }
     }
 
-    public void deleteData(int position){
-        mData.remove(position);
-        //해당하는 포지션만 다시 그림
-        notifyItemRemoved(position);
+    public void deleteData(int id){
+        for(int i=0; i<mData.size(); i++){
+            if(mData.get(i).getId() == id){
+                mData.remove(i);
+                notifyDataSetChanged();
+                return;
+            }
+        }
     }
 
     public class MemoViewHolder extends RecyclerView.ViewHolder {

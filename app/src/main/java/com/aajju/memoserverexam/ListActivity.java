@@ -61,14 +61,16 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
             getMemoList();
         }
 
+        // 메모 수정 후 리스트 액티비티로 복귀
         if (requestCode == 2000 && resultCode == RESULT_OK && data != null) {
             String subject, content;
             int id = data.getIntExtra("id", -1);
             subject = data.getStringExtra("subject");
             content = data.getStringExtra("content");
 
-            updateMemo(id, new Memo(subject, content));
-            getMemoList();
+            updateMemo(id, new Memo(id, subject, content));
+            System.out.println(id);
+//            getMemoList();
 
         }
     }
@@ -114,11 +116,11 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         mApi.updateMemo(mPreferenceManager.getUserToken(), id, memo.getTitle(), memo.getContents()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-//                if(!response.isSuccessful()){
-//                    Toast.makeText(ListActivity.this, "메모 업데이트 실패", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-                mMemoAdapter.updateData(memo.getId(), memo);
+                if(!response.isSuccessful()){
+                    Toast.makeText(ListActivity.this, "메모 업데이트 실패", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mMemoAdapter.updateData(id, memo);
             }
 
             @Override
@@ -133,6 +135,10 @@ public class ListActivity extends AppCompatActivity implements MemoAdapter.OnMem
         mApi.deleteMemo(mPreferenceManager.getUserToken(), id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(ListActivity.this, "메모 삭제 실패", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mMemoAdapter.deleteData(id);
             }
 

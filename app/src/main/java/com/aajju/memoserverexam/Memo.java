@@ -12,6 +12,11 @@ public class Memo implements Serializable {
     private String contents;
     private long time;
 
+    public Memo(int id, String title, String contents) {
+        this.id = id;
+        this.title = title;
+        this.contents = contents;
+    }
 
     public Memo(String title, String contents) {
         this.title = title;

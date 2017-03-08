@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 /**
  * Created by massivcode@gmail.com on 2017. 2. 24. 15:27
@@ -32,7 +33,7 @@ public interface Api {
     @FormUrlEncoded
     Call<Void> login(@Field("email") String email, @Field("password") String password);
 
-    @GET("memo")
+    @GET("memo/")
     Call<List<Memo>> getMemoList(@Header("x-auth-token") String token);
 
     @PUT("memo/")
@@ -43,8 +44,7 @@ public interface Api {
     @FormUrlEncoded
     Call<Void> addMemo(@Header("x-auth-token") String token, @Field("title") String title, @Field("contents") String contents);
 
-    @DELETE("memo/")
-    @FormUrlEncoded
-    Call<Void> deleteMemo(@Header("x-auth-token") String token, @Field("id") int id);
+    @DELETE("memo/{id}")
+    Call<Void> deleteMemo(@Header("x-auth-token") String token, @Path("id") int id);
 
 }
