@@ -1,10 +1,14 @@
 package com.aajju.memoserverexam;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit2.Call;
@@ -13,8 +17,9 @@ import retrofit2.Response;
 
 public class JoinActivity extends AppCompatActivity {
 
+    private TextView mIdCheckStateTextView;
     private EditText mEmail, mPassword;
-    private int mCheck = -1;
+    private boolean mIsDuplicated;
     private Api mApi;
 
 
@@ -25,62 +30,85 @@ public class JoinActivity extends AppCompatActivity {
 
         mEmail = (EditText) findViewById(R.id.join_email_et);
         mPassword = (EditText) findViewById(R.id.join_password_et);
+        mIdCheckStateTextView = (TextView) findViewById(R.id.join_check_state_tv);
+
+        mEmail.addTextChangedListener(mEmailTextWatcher);
 
         mApi = HttpHelper.getAPI();
-
-        // 중복체크 버튼
-        findViewById(R.id.check_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(TextUtils.isEmpty(mEmail.getText().toString())){
-                    Toast.makeText(JoinActivity.this, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
-                } else {
-                    mApi.duplicateCheck(mEmail.getText().toString()).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if(response.code() == 200){  // 중복 아님
-                                mCheck = 1;
-                                Toast.makeText(JoinActivity.this, "사용 가능한 이메일 주소입니다", Toast.LENGTH_SHORT).show();
-                            } else if (response.code() == 409){   // 중복
-                                Toast.makeText(JoinActivity.this, "이미 존재하는 이메일 주소입니다. \n 다른 이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(JoinActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-                }
-
-            }
-        });
 
         // 회원 가입 완료 버튼
         findViewById(R.id.join_ok_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TextUtils.isEmpty(mEmail.getText().toString()) || TextUtils.isEmpty(mPassword.getText().toString())){
+                if (TextUtils.isEmpty(mEmail.getText().toString()) || TextUtils.isEmpty(mPassword.getText().toString())) {
                     Toast.makeText(JoinActivity.this, "둘다 입력하세요", Toast.LENGTH_SHORT).show();
-                } else {
-                    mApi.join(mEmail.getText().toString(), mPassword.getText().toString()).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-
-                        }
-                    });
+                    return;
                 }
+
+                if (!mIsDuplicated) {
+                    Toast.makeText(JoinActivity.this, "중복된 계정입니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mApi.join(mEmail.getText().toString(), mPassword.getText().toString()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
             }
         });
 
-
-
     }
+
+    private TextWatcher mEmailTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String email = editable.toString();
+
+            if (email.length() > 1) {
+                mApi.duplicateCheck(email).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            mIsDuplicated = true;
+                            mIdCheckStateTextView.setTextColor(Color.parseColor("#2196f3"));
+                            mIdCheckStateTextView.setText("가입 가능한 계정입니다!");
+                        } else {
+                            mIsDuplicated = false;
+                            mIdCheckStateTextView.setTextColor(Color.parseColor("#F44336"));
+                            mIdCheckStateTextView.setText("이미 가입된 계정입니다!");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            if (email.length() == 0) {
+                mIdCheckStateTextView.setText("아이디를 입력해주세요");
+            }
+        }
+    };
+
+
 }

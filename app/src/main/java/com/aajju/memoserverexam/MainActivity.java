@@ -15,6 +15,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private Api mApi;
+    private PreferenceManager mPreferenceManager;
+
     private ProgressDialog mProgressDialog;
     private EditText mEmail, mPassword;
     private String mToken;
@@ -24,8 +26,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+
         mEmail = (EditText) findViewById(R.id.email_et);
+        mEmail.setText(mPreferenceManager.getUserId());
         mPassword = (EditText) findViewById(R.id.password_et);
+        mPassword.setText(mPreferenceManager.getUserPw());
+
+        String token = mPreferenceManager.getUserToken();
 
         mApi = HttpHelper.getAPI();
 
